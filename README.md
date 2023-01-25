@@ -45,6 +45,18 @@ $ yarn run start:dev
 $ yarn run start:prod
 ```
 
+## Getting all products
+
+```
+http://localhost:3333/products/all
+```
+
+## Getting products by ID
+
+```
+http://localhost:3333/products/1
+```
+
 ## Test
 
 ```bash
