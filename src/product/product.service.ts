@@ -8,12 +8,33 @@ export class ProductService {
   constructor(private httpService: HttpService) {}
   private url = 'https://fakestoreapi.com/products';
 
-  async products() {
+  async products(options) {
     return this.httpService
       .get(`${this.url}`, {
         headers: { 'Accept-Encoding': 'gzip,deflate,compress' },
       })
-      .pipe(map((res) => res.data))
+      .pipe(
+        map((res) => {
+          if (options) {
+            const sortArray = res.data.sort((a, b) =>
+              options === 'desc'
+                ? a.price < b.price
+                  ? 1
+                  : a.price > b.price
+                  ? -1
+                  : 0
+                : a.price > b.price
+                ? 1
+                : a.price < b.price
+                ? -1
+                : 0,
+            );
+            return sortArray;
+          } else {
+            return res.data;
+          }
+        }),
+      )
       .pipe(
         catchError(() => {
           throw new ForbiddenException('API not available');
