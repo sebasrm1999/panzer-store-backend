@@ -15,17 +15,17 @@ export class ProductService {
       })
       .pipe(
         map((res) => {
-          if (options) {
-            const sortArray = res.data.sort((a, b) =>
+          if (options && options != '') {
+            const sortArray = res.data.sort((firstProduct, secondProduct) =>
               options === 'desc'
-                ? a.price < b.price
+                ? firstProduct.price < secondProduct.price
                   ? 1
-                  : a.price > b.price
+                  : firstProduct.price > secondProduct.price
                   ? -1
                   : 0
-                : a.price > b.price
+                : firstProduct.price > secondProduct.price
                 ? 1
-                : a.price < b.price
+                : firstProduct.price < secondProduct.price
                 ? -1
                 : 0,
             );
