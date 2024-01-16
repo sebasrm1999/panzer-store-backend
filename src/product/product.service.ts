@@ -3,6 +3,28 @@ import { Injectable } from '@nestjs/common';
 import { ForbiddenException } from '@nestjs/common/exceptions';
 import { catchError, map } from 'rxjs';
 
+function sortByOptions(options: string, firstProduct: any, secondProduct: any) {
+  if (options === 'desc') {
+    if (firstProduct.price < secondProduct.price) {
+      return 1;
+    }
+    if (firstProduct.price > secondProduct.price) {
+      return -1;
+    }
+    return 0;
+  }
+  if (options === 'asc') {
+    if (firstProduct.price > secondProduct.price) {
+      return 1;
+    }
+    if (firstProduct.price < secondProduct.price) {
+      return -1;
+    }
+    return 0;
+  }
+  return 0;
+}
+
 @Injectable({})
 export class ProductService {
   constructor(private httpService: HttpService) {}
@@ -15,19 +37,9 @@ export class ProductService {
       })
       .pipe(
         map((res) => {
-          if (options && options != '') {
+          if (options && options !== '') {
             const sortArray = res.data.sort((firstProduct, secondProduct) =>
-              options === 'desc'
-                ? firstProduct.price < secondProduct.price
-                  ? 1
-                  : firstProduct.price > secondProduct.price
-                  ? -1
-                  : 0
-                : firstProduct.price > secondProduct.price
-                ? 1
-                : firstProduct.price < secondProduct.price
-                ? -1
-                : 0,
+              sortByOptions(options, firstProduct, secondProduct),
             );
             return sortArray;
           } else {
